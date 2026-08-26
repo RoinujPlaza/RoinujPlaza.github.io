@@ -1,0 +1,10 @@
+# preview screenshots (local verification only)
+preview/
+
+# reference material
+HOME.mp4
+HOME.png
+
+# OS junk
+Thumbs.db
+Desktop.ini
