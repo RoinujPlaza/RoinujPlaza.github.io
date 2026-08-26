@@ -106,7 +106,7 @@
   function positionSelectedChar() {
     var r = castSlot.getBoundingClientRect();
     var useNarrow = window.innerWidth <= 900;
-    var targetX = window.innerWidth * (useNarrow ? 0.78 : 0.74);
+    var targetX = window.innerWidth * (useNarrow ? 0.82 : 0.81);
     var shift = targetX - (r.left + r.width / 2);
     castSlot.style.setProperty("--shift", shift.toFixed(1) + "px");
   }
