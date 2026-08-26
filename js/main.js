@@ -83,7 +83,8 @@
     var locked = sidebar.classList.contains("open")
       || !$("#commentsDialog").classList.contains("hidden")
       || !$("#aboutDialog").classList.contains("hidden")
-      || !$("#certLightbox").classList.contains("hidden");
+      || !$("#certLightbox").classList.contains("hidden")
+      || $("#scene").classList.contains("select-mode");
     document.body.classList.toggle("no-scroll", locked);
   }
 
@@ -95,6 +96,69 @@
 
   document.querySelectorAll(".sidebar .nav a, .sidebar .hire-btn").forEach(function (el) {
     el.addEventListener("click", function () { setDrawer(false); });
+  });
+
+  /* ---------- character select -> projects overlay ---------- */
+  var castSlot = $("#castS1");
+  var sceneEl = $("#scene");
+  var projectsGrid = $("#projectsGrid");
+
+  function positionSelectedChar() {
+    var r = castSlot.getBoundingClientRect();
+    var useNarrow = window.innerWidth <= 900;
+    var targetX = window.innerWidth * (useNarrow ? 0.78 : 0.74);
+    var shift = targetX - (r.left + r.width / 2);
+    castSlot.style.setProperty("--shift", shift.toFixed(1) + "px");
+  }
+
+  function setProjects(open) {
+    if (open) {
+      if (!dialog.classList.contains("hidden")) closeDialog();
+      if (!aboutDialog.classList.contains("hidden")) closeAbout();
+      if (sidebar.classList.contains("open")) setDrawer(false);
+      positionSelectedChar();
+    }
+    castSlot.classList.toggle("active", open);
+    castSlot.setAttribute("aria-expanded", String(open));
+    sceneEl.classList.toggle("select-mode", open);
+    updateBodyLock();
+    if (open) {
+      var firstClose = projectsGrid.querySelector(".card-close");
+      if (firstClose) firstClose.focus();
+    } else if (document.contains(castSlot)) {
+      castSlot.focus();
+    }
+  }
+
+  castSlot.addEventListener("click", function () {
+    setProjects(!sceneEl.classList.contains("select-mode"));
+  });
+  castSlot.addEventListener("keydown", function (ev) {
+    if (ev.key === "Enter" || ev.key === " ") {
+      ev.preventDefault();
+      setProjects(!sceneEl.classList.contains("select-mode"));
+    }
+  });
+  document.querySelectorAll(".card-close").forEach(function (btn) {
+    btn.addEventListener("click", function () { setProjects(false); });
+  });
+
+  window.addEventListener("resize", function () {
+    if (sceneEl.classList.contains("select-mode")) positionSelectedChar();
+  });
+
+  document.querySelectorAll(".demo-link").forEach(function (link) {
+    link.addEventListener("click", function (ev) {
+      ev.preventDefault(); // placeholder until real demos exist
+    });
+  });
+
+  /* tap anywhere (outside cards/character) to close */
+  sceneEl.addEventListener("click", function (ev) {
+    if (!sceneEl.classList.contains("select-mode")) return;
+    if (projectsGrid.contains(ev.target)) return;
+    if (castSlot.contains(ev.target)) return;
+    setProjects(false);
   });
 
   /* ---------- comments (local guestbook) ---------- */
@@ -185,6 +249,7 @@
     if (!$("#certLightbox").classList.contains("hidden")) { closeCert(); return; }
     if (!$("#aboutDialog").classList.contains("hidden")) { closeAbout(); return; }
     if (!dialog.classList.contains("hidden")) { closeDialog(); return; }
+    if (sceneEl.classList.contains("select-mode")) { setProjects(false); return; }
     if (sidebar.classList.contains("open")) setDrawer(false);
   });
 
@@ -223,6 +288,10 @@
   $("#aboutLink").addEventListener("click", function (ev) {
     ev.preventDefault();
     openAbout(ev.currentTarget);
+  });
+  $("#projectsLink").addEventListener("click", function (ev) {
+    ev.preventDefault();
+    setProjects(true);
   });
   var heroAbout = $("#heroAbout");
   heroAbout.addEventListener("click", function () { openAbout(heroAbout); });

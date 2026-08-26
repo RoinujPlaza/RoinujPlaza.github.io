@@ -27,7 +27,7 @@
 
     <nav class="nav reveal d1" aria-label="Main">
       <a href="#" id="aboutLink">about me</a>
-      <a href="#" data-soon>projects</a>
+      <a href="#" id="projectsLink">projects</a>
       <a href="#" data-soon>stack</a>
       <a href="#" data-soon>experience</a>
     </nav>
@@ -88,10 +88,10 @@
   <main class="scene" id="scene">
     <div class="scene-bg" aria-hidden="true"></div>
 
-    <div class="cast" aria-hidden="true">
-      <div class="cast-slot s1"><img class="cast-member" src="assets/charracter1.png" alt="" draggable="false"></div>
-      <div class="cast-slot s2"><img class="cast-member" src="assets/seccharacter1.png" alt="" draggable="false"></div>
-      <div class="cast-slot s3"><img class="cast-member" src="assets/charactere2.png" alt="" draggable="false"></div>
+    <div class="cast">
+      <div class="cast-slot s1" id="castS1" role="button" tabindex="0" aria-expanded="false" aria-label="Select character — view projects"><img class="cast-member" src="assets/charracter1.png" alt="" draggable="false"></div>
+      <div class="cast-slot s2" aria-hidden="true"><img class="cast-member" src="assets/seccharacter1.png" alt="" draggable="false"></div>
+      <div class="cast-slot s3" aria-hidden="true"><img class="cast-member" src="assets/charactere2.png" alt="" draggable="false"></div>
     </div>
 
     <div class="hero-row">
@@ -105,6 +105,49 @@
           <img src="assets/avatar-popcat.jpg" alt="" draggable="false">
         </div>
       </div>
+    </div>
+
+    <div class="projects-grid" id="projectsGrid" aria-label="Projects">
+      <article class="project-card" style="--i:0">
+        <div class="project-top">
+          <button class="card-close" type="button" aria-label="Close projects">&times;</button>
+          <span class="status-badge status-finished">finished</span>
+        </div>
+        <h3 class="project-name">Project One</h3>
+        <p class="project-sub">A responsive front-end build with clean semantics and a pixel-art theme. Placeholder — swap me later.</p>
+        <div class="project-tags"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
+        <a class="demo-link" href="#" title="coming soon">live demo &rarr;</a>
+      </article>
+      <article class="project-card" style="--i:1">
+        <div class="project-top">
+          <button class="card-close" type="button" aria-label="Close projects">&times;</button>
+          <span class="status-badge status-developing">developing</span>
+        </div>
+        <h3 class="project-name">Project Two</h3>
+        <p class="project-sub">A full-stack web app currently in active development. Placeholder — swap me later.</p>
+        <div class="project-tags"><span>Vue</span><span>Node.js</span><span>Express</span></div>
+        <a class="demo-link" href="#" title="coming soon">live demo &rarr;</a>
+      </article>
+      <article class="project-card" style="--i:2">
+        <div class="project-top">
+          <button class="card-close" type="button" aria-label="Close projects">&times;</button>
+          <span class="status-badge status-planned">planned</span>
+        </div>
+        <h3 class="project-name">Project Three</h3>
+        <p class="project-sub">A mobile app concept planned for next semester. Placeholder — swap me later.</p>
+        <div class="project-tags"><span>Flutter</span><span>Firebase</span></div>
+        <a class="demo-link" href="#" title="coming soon">live demo &rarr;</a>
+      </article>
+      <article class="project-card" style="--i:3">
+        <div class="project-top">
+          <button class="card-close" type="button" aria-label="Close projects">&times;</button>
+          <span class="status-badge status-finished">finished</span>
+        </div>
+        <h3 class="project-name">Project Four</h3>
+        <p class="project-sub">A small utility tool built for classmates. Placeholder — swap me later.</p>
+        <div class="project-tags"><span>Python</span><span>Tkinter</span></div>
+        <a class="demo-link" href="#" title="coming soon">live demo &rarr;</a>
+      </article>
     </div>
   </main>
 
