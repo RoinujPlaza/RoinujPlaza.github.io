@@ -84,7 +84,8 @@
       || !$("#commentsDialog").classList.contains("hidden")
       || !$("#aboutDialog").classList.contains("hidden")
       || !$("#certLightbox").classList.contains("hidden")
-      || $("#scene").classList.contains("select-mode");
+      || $("#scene").classList.contains("select-mode")
+      || $("#scene").classList.contains("stack-mode");
     document.body.classList.toggle("no-scroll", locked);
   }
 
@@ -160,6 +161,122 @@
     if (castSlot.contains(ev.target)) return;
     setProjects(false);
   });
+
+  /* ---------- middle character -> stack and tools ---------- */
+  var castSlot2 = $("#castS2");
+  var stackGrid = $("#stackGrid");
+
+  function positionSelectedChar2() {
+    var r = castSlot2.getBoundingClientRect();
+    var useNarrow = window.innerWidth <= 900;
+    var targetX = window.innerWidth * (useNarrow ? 0.82 : 0.81);
+    var shift = targetX - (r.left + r.width / 2);
+    castSlot2.style.setProperty("--shift", shift.toFixed(1) + "px");
+  }
+
+  function setStack(open) {
+    if (open) {
+      if (sceneEl.classList.contains("select-mode")) setProjects(false);
+      if (!dialog.classList.contains("hidden")) closeDialog();
+      if (!aboutDialog.classList.contains("hidden")) closeAbout();
+      if (sidebar.classList.contains("open")) setDrawer(false);
+      positionSelectedChar2();
+    }
+    castSlot2.classList.toggle("active", open);
+    castSlot2.setAttribute("aria-expanded", String(open));
+    sceneEl.classList.toggle("stack-mode", open);
+    updateBodyLock();
+    if (open) {
+      stackGrid.focus && stackGrid.focus();
+    } else if (document.contains(castSlot2)) {
+      castSlot2.focus();
+    }
+  }
+
+  // make setProjects also close stack (mutual exclusive)
+  var _origSetProjects = setProjects;
+  setProjects = function (open) {
+    if (open && sceneEl.classList.contains("stack-mode")) setStack(false);
+    _origSetProjects(open);
+  };
+
+  castSlot2.addEventListener("click", function () {
+    setStack(!sceneEl.classList.contains("stack-mode"));
+  });
+  castSlot2.addEventListener("keydown", function (ev) {
+    if (ev.key === "Enter" || ev.key === " ") {
+      ev.preventDefault();
+      setStack(!sceneEl.classList.contains("stack-mode"));
+    }
+  });
+
+  window.addEventListener("resize", function () {
+    if (sceneEl.classList.contains("stack-mode")) positionSelectedChar2();
+  });
+
+  sceneEl.addEventListener("click", function (ev) {
+    if (!sceneEl.classList.contains("stack-mode")) return;
+    if (stackGrid.contains(ev.target)) return;
+    if (castSlot2.contains(ev.target)) return;
+    setStack(false);
+  });
+
+  /* populate infinite marquees */
+  (function populateMarquees() {
+    var stacks = {
+      marqueeFrontend: [
+        { src: "assets/stack/html5.svg", alt: "HTML5" },
+        { src: "assets/stack/css3.svg", alt: "CSS3" },
+        { src: "assets/stack/javascript.svg", alt: "JavaScript" },
+        { src: "assets/stack/nextjs.svg", alt: "Next.js" },
+        { src: "assets/stack/flutter.svg", alt: "Flutter" }
+      ],
+      marqueeBackend: [
+        { src: "assets/stack/mongodb.svg", alt: "MongoDB" },
+        { src: "assets/stack/php.svg", alt: "PHP" },
+        { src: "assets/stack/dart.svg", alt: "Dart" },
+        { src: "assets/stack/mysql.svg", alt: "MySQL" }
+      ],
+      marqueeTools: [
+        { src: "assets/stack/git.svg", alt: "Git" },
+        { src: "assets/stack/github.svg", alt: "GitHub" },
+        { src: "assets/stack/vscode.svg", alt: "VS Code" }
+      ]
+    };
+
+    function buildTrack(id, items) {
+      var track = document.getElementById(id);
+      if (!track) return;
+      function addSet(hidden) {
+        items.forEach(function (it) {
+          var tile = document.createElement("div");
+          tile.className = "tech-tile";
+          if (hidden) tile.setAttribute("aria-hidden", "true");
+          var img = document.createElement("img");
+          img.src = it.src;
+          img.alt = it.alt;
+          img.loading = "lazy";
+          img.draggable = false;
+          img.addEventListener("error", function () {
+            // fallback: show text label if logo missing
+            img.style.display = "none";
+            var fallback = document.createElement("span");
+            fallback.textContent = it.alt;
+            fallback.style.fontFamily = '"Silkscreen", monospace';
+            fallback.style.fontSize = "10px";
+            fallback.style.textAlign = "center";
+            tile.appendChild(fallback);
+          });
+          tile.appendChild(img);
+          track.appendChild(tile);
+        });
+      }
+      addSet(false);
+      addSet(true); // duplicate for seamless loop
+    }
+
+    Object.keys(stacks).forEach(function (id) { buildTrack(id, stacks[id]); });
+  })();
 
   /* ---------- comments (local guestbook) ---------- */
   var STORAGE_KEY = "roinuj.plaza.comments";
@@ -249,6 +366,7 @@
     if (!$("#certLightbox").classList.contains("hidden")) { closeCert(); return; }
     if (!$("#aboutDialog").classList.contains("hidden")) { closeAbout(); return; }
     if (!dialog.classList.contains("hidden")) { closeDialog(); return; }
+    if (sceneEl.classList.contains("stack-mode")) { setStack(false); return; }
     if (sceneEl.classList.contains("select-mode")) { setProjects(false); return; }
     if (sidebar.classList.contains("open")) setDrawer(false);
   });
@@ -292,6 +410,10 @@
   $("#projectsLink").addEventListener("click", function (ev) {
     ev.preventDefault();
     setProjects(true);
+  });
+  $("#stackLink").addEventListener("click", function (ev) {
+    ev.preventDefault();
+    setStack(true);
   });
   var heroAbout = $("#heroAbout");
   heroAbout.addEventListener("click", function () { openAbout(heroAbout); });

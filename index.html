@@ -28,7 +28,7 @@
     <nav class="nav reveal d1" aria-label="Main">
       <a href="#" id="aboutLink">about me</a>
       <a href="#" id="projectsLink">projects</a>
-      <a href="#" data-soon>stack</a>
+      <a href="#" id="stackLink">stack</a>
       <a href="#" data-soon>experience</a>
     </nav>
 
@@ -90,7 +90,7 @@
 
     <div class="cast">
       <div class="cast-slot s1" id="castS1" role="button" tabindex="0" aria-expanded="false" aria-label="Select character — view projects"><img class="cast-member" src="assets/charracter1.png" alt="" draggable="false"></div>
-      <div class="cast-slot s2" aria-hidden="true"><img class="cast-member" src="assets/seccharacter1.png" alt="" draggable="false"></div>
+      <div class="cast-slot s2" id="castS2" role="button" tabindex="0" aria-expanded="false" aria-label="Select character — view stack and tools"><img class="cast-member" src="assets/seccharacter1.png" alt="" draggable="false"></div>
       <div class="cast-slot s3" aria-hidden="true"><img class="cast-member" src="assets/charactere2.png" alt="" draggable="false"></div>
     </div>
 
@@ -148,6 +148,31 @@
         <div class="project-tags"><span>Python</span><span>Tkinter</span></div>
         <a class="demo-link" href="#" title="coming soon">live demo &rarr;</a>
       </article>
+    </div>
+
+    <div class="stack-grid" id="stackGrid" aria-label="Stack and tools">
+      <h2 class="stack-title">stack and tools</h2>
+
+      <section class="stack-row">
+        <h3 class="stack-label">frondend</h3>
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee-track" id="marqueeFrontend"></div>
+        </div>
+      </section>
+
+      <section class="stack-row">
+        <h3 class="stack-label">backend</h3>
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee-track" id="marqueeBackend"></div>
+        </div>
+      </section>
+
+      <section class="stack-row">
+        <h3 class="stack-label">tools</h3>
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee-track" id="marqueeTools"></div>
+        </div>
+      </section>
     </div>
   </main>
 

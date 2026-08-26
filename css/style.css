@@ -636,16 +636,27 @@ body {
 
 /* ---------------- Character select + projects panel ---------------- */
 
-.cast-slot.s1 {
+.cast-slot.s1,
+.cast-slot.s2 {
   cursor: pointer;
   transform-origin: bottom center; /* keep feet planted while scaling up */
   transition: transform 0.45s ease, filter 0.25s ease;
 }
-.cast-slot.s1:focus-visible {
+.cast-slot.s2.active {
+  transform: translateX(var(--shift, 0px)) scale(var(--sel-scale, 1.9));
+  z-index: 35;
+  filter:
+    drop-shadow(0 24px 16px rgba(20, 12, 8, 0.5))
+    drop-shadow(0 0 26px rgba(225, 141, 191, 0.65));
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), filter 0.25s ease;
+}
+.cast-slot.s1:focus-visible,
+.cast-slot.s2:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
-.scene.select-mode .cast { z-index: 31; }
+.scene.select-mode .cast,
+.scene.stack-mode .cast { z-index: 31; }
 .cast-slot.s1.active {
   transform: translateX(var(--shift, 0px)) scale(var(--sel-scale, 1.9));
   z-index: 35;
@@ -657,7 +668,8 @@ body {
 }
 
 /* dim the hero card while a character is selected */
-.scene.select-mode .hero-inner {
+.scene.select-mode .hero-inner,
+.scene.stack-mode .hero-inner {
   opacity: 0.35;
   pointer-events: none;
 }
@@ -679,6 +691,84 @@ body {
 }
 .scene.select-mode .projects-grid { visibility: visible; }
 .projects-grid::-webkit-scrollbar { display: none; }
+
+.stack-grid {
+  position: absolute;
+  top: 8%;
+  bottom: 6%;
+  left: 4%;
+  right: 46%;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 2vh, 22px);
+  overflow-y: auto;
+  scrollbar-width: none;
+  visibility: hidden;
+}
+.scene.stack-mode .stack-grid { visibility: visible; }
+.stack-grid::-webkit-scrollbar { display: none; }
+
+.stack-title {
+  margin: 0;
+  font-family: "Press Start 2P", monospace;
+  font-size: clamp(14px, 1.4vw, 20px);
+  letter-spacing: 0.06em;
+  text-transform: lowercase;
+  color: #f2ece4;
+  text-shadow: 0 2px 0 rgba(0,0,0,0.35);
+}
+.stack-label {
+  margin: 0 0 8px;
+  font-family: "Silkscreen", monospace;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: lowercase;
+  color: #f2ece4;
+}
+.stack-row { min-width: 0; }
+
+.marquee {
+  overflow: hidden;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.06);
+  padding: 10px 0;
+}
+.marquee-track {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  width: max-content;
+  animation: marquee 18s linear infinite;
+  will-change: transform;
+}
+.stack-row:nth-child(3) .marquee-track { animation-direction: reverse; animation-duration: 22s; }
+.stack-row:nth-child(4) .marquee-track { animation-duration: 26s; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+
+.tech-tile {
+  flex: 0 0 auto;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  padding: 10px;
+}
+.tech-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.tech-tile--dark {
+  background: #0e0a0e;
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.tech-tile--dark img { filter: none; }
 
 .project-card {
   background: #14100f;
@@ -814,6 +904,10 @@ body.loaded .hero-row { animation: fade-up 0.7s 0.15s ease forwards; }
 @keyframes card-pop {
   from { opacity: 0; transform: translateY(18px) scale(0.92); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -952,15 +1046,18 @@ body.loaded .hero-row { animation: fade-up 0.7s 0.15s ease forwards; }
   .cast-slot.s2 { left: 36%; height: 23vh; }
   .cast-slot.s3 { left: 64%; height: 26vh; }
 
-  /* projects cards leave room so the enlarged character stays clear */
-  .cast-slot.s1 { --sel-scale: 1.3; }
-  .projects-grid {
+  /* projects / stack cards leave room so the enlarged character stays clear */
+  .cast-slot.s1,
+  .cast-slot.s2 { --sel-scale: 1.3; }
+  .projects-grid,
+  .stack-grid {
     left: 4%;
     right: 42%;
     top: 6%;
     bottom: 4%;
-    grid-template-columns: 1fr;
   }
+  .projects-grid { grid-template-columns: 1fr; }
+  .tech-tile { width: 60px; height: 60px; }
 }
 
 @media (max-width: 560px) {
