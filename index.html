@@ -29,7 +29,7 @@
       <a href="#" id="aboutLink">about me</a>
       <a href="#" id="projectsLink">projects</a>
       <a href="#" id="stackLink">stack and tools</a>
-      <a href="#" data-soon>experience</a>
+      <a href="#" id="typingLink">typing test</a>
     </nav>
 
     <hr class="rule">
@@ -91,7 +91,7 @@
     <div class="cast">
       <div class="cast-slot s1" id="castS1" role="button" tabindex="0" aria-expanded="false" aria-label="Select character — view projects"><img class="cast-member" src="assets/charracter1.png" alt="" draggable="false"></div>
       <div class="cast-slot s2" id="castS2" role="button" tabindex="0" aria-expanded="false" aria-label="Select character — view stack and tools"><img class="cast-member" src="assets/seccharacter1.png" alt="" draggable="false"></div>
-      <div class="cast-slot s3" aria-hidden="true"><img class="cast-member" src="assets/charactere2.png" alt="" draggable="false"></div>
+      <div class="cast-slot s3" id="castS3" role="button" tabindex="0" aria-expanded="false" aria-label="Select character — typing test"><img class="cast-member" src="assets/charactere2.png" alt="" draggable="false"></div>
     </div>
 
     <div class="hero-row">
@@ -173,6 +173,21 @@
           <div class="marquee-track" id="marqueeTools"></div>
         </div>
       </section>
+    </div>
+
+    <div class="typing-veil" id="typingVeil" aria-hidden="true"></div>
+    <div class="typing-grid" id="typingGrid" aria-label="Typing test">
+      <h2 class="typing-title">typing test</h2>
+      <div class="typing-card">
+        <pre class="typing-text" id="typingText" aria-live="polite"></pre>
+        <textarea class="typing-input" id="typingInput" rows="4" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Start typing..."></textarea>
+        <div class="typing-stats">
+          <span>WPM: <b id="wpm">0</b></span>
+          <span>Accuracy: <b id="acc">100%</b></span>
+          <span>Time: <b id="time">30s</b></span>
+        </div>
+        <button class="typing-restart" id="typingRestart" type="button">restart</button>
+      </div>
     </div>
   </main>
 

@@ -85,7 +85,8 @@
       || !$("#aboutDialog").classList.contains("hidden")
       || !$("#certLightbox").classList.contains("hidden")
       || $("#scene").classList.contains("select-mode")
-      || $("#scene").classList.contains("stack-mode");
+      || $("#scene").classList.contains("stack-mode")
+      || $("#scene").classList.contains("typing-mode");
     document.body.classList.toggle("no-scroll", locked);
   }
 
@@ -287,6 +288,174 @@
     Object.keys(stacks).forEach(function (id) { buildTrack(id, stacks[id]); });
   })();
 
+  /* ---------- third character -> typing test ---------- */
+  var castSlot3 = $("#castS3");
+  var typingGrid = $("#typingGrid");
+  var typingVeil = $("#typingVeil");
+  var typingText = $("#typingText");
+  var typingInput = $("#typingInput");
+  var wpmEl = $("#wpm");
+  var accEl = $("#acc");
+  var timeEl = $("#time");
+  var typingRestart = $("#typingRestart");
+
+  var snippets = [
+    "function greet(name) {\n  return `Hello, ${name}!`;\n}",
+    "<div class=\"card\">\n  <h1>Roinuj Plaza</h1>\n  <p>Hello World</p>\n</div>",
+    ".card {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}",
+    "const sum = (a, b) => a + b;\nconsole.log(sum(2, 3));",
+    "async function fetchData(url) {\n  const res = await fetch(url);\n  return res.json();\n}",
+    "<?php\n  echo \"Hello, Roinuj!\";\n?>",
+    "SELECT * FROM users\nWHERE active = 1\nORDER BY name;",
+    "<nav class=\"nav\">\n  <a href=\"#\">Home</a>\n</nav>"
+  ];
+  var currentSnippet = "";
+  var timer = null;
+  var timeLeft = 30;
+  var started = false;
+
+  function positionSelectedChar3() {
+    var r = castSlot3.getBoundingClientRect();
+    var useNarrow = window.innerWidth <= 900;
+    var targetX = window.innerWidth * (useNarrow ? 0.86 : 0.84);
+    var shift = targetX - (r.left + r.width / 2);
+    castSlot3.style.setProperty("--shift", shift.toFixed(1) + "px");
+  }
+
+  function renderSnippet() {
+    typingText.textContent = "";
+    for (var i = 0; i < currentSnippet.length; i++) {
+      var span = document.createElement("span");
+      span.textContent = currentSnippet[i];
+      span.className = "pending";
+      typingText.appendChild(span);
+    }
+  }
+
+  function pickSnippet() {
+    currentSnippet = snippets[Math.floor(Math.random() * snippets.length)];
+    renderSnippet();
+    typingInput.value = "";
+    typingInput.disabled = false;
+    wpmEl.textContent = "0";
+    accEl.textContent = "100%";
+    timeLeft = 30;
+    timeEl.textContent = timeLeft + "s";
+    started = false;
+    clearInterval(timer);
+    timer = null;
+  }
+
+  function updateStats() {
+    var typed = typingInput.value;
+    var correct = 0;
+    for (var i = 0; i < typed.length && i < currentSnippet.length; i++) {
+      if (typed[i] === currentSnippet[i]) correct++;
+    }
+    var elapsed = 30 - timeLeft;
+    var mins = elapsed / 60 || 0.01;
+    var wpm = Math.round((correct / 5) / mins);
+    if (!isFinite(wpm) || wpm < 0) wpm = 0;
+    if (typed.length === 0) wpm = 0;
+    wpmEl.textContent = String(wpm);
+    var acc = typed.length ? Math.round((correct / typed.length) * 100) : 100;
+    accEl.textContent = acc + "%";
+    var spans = typingText.children;
+    for (var j = 0; j < spans.length; j++) {
+      if (j < typed.length) {
+        spans[j].className = typed[j] === currentSnippet[j] ? "correct" : "incorrect";
+      } else {
+        spans[j].className = "pending";
+      }
+    }
+  }
+
+  function startTimer() {
+    if (started) return;
+    started = true;
+    timer = setInterval(function () {
+      timeLeft--;
+      timeEl.textContent = timeLeft + "s";
+      updateStats();
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        timer = null;
+        typingInput.disabled = true;
+      }
+    }, 1000);
+  }
+
+  function setTyping(open) {
+    if (open) {
+      if (sceneEl.classList.contains("select-mode")) setProjects(false);
+      if (sceneEl.classList.contains("stack-mode")) setStack(false);
+      if (!dialog.classList.contains("hidden")) closeDialog();
+      if (!aboutDialog.classList.contains("hidden")) closeAbout();
+      if (sidebar.classList.contains("open")) setDrawer(false);
+      positionSelectedChar3();
+      pickSnippet();
+    } else {
+      clearInterval(timer);
+      timer = null;
+    }
+    castSlot3.classList.toggle("active", open);
+    castSlot3.setAttribute("aria-expanded", String(open));
+    sceneEl.classList.toggle("typing-mode", open);
+    updateBodyLock();
+    if (open) {
+      typingInput.focus();
+    } else if (document.contains(castSlot3)) {
+      castSlot3.focus();
+    }
+  }
+
+  // wrap previous wrappers to also close typing
+  var _origSetProjects2 = setProjects;
+  setProjects = function (open) {
+    if (open && sceneEl.classList.contains("typing-mode")) setTyping(false);
+    _origSetProjects2(open);
+  };
+  var _origSetStack = setStack;
+  setStack = function (open) {
+    if (open && sceneEl.classList.contains("typing-mode")) setTyping(false);
+    _origSetStack(open);
+  };
+
+  castSlot3.addEventListener("click", function () {
+    setTyping(!sceneEl.classList.contains("typing-mode"));
+  });
+  castSlot3.addEventListener("keydown", function (ev) {
+    if (ev.key === "Enter" || ev.key === " ") {
+      ev.preventDefault();
+      setTyping(!sceneEl.classList.contains("typing-mode"));
+    }
+  });
+
+  typingInput.addEventListener("input", function () {
+    startTimer();
+    updateStats();
+    if (typingInput.value.length >= currentSnippet.length) {
+      clearInterval(timer);
+      timer = null;
+      typingInput.disabled = true;
+    }
+  });
+  typingRestart.addEventListener("click", pickSnippet);
+
+  window.addEventListener("resize", function () {
+    if (sceneEl.classList.contains("typing-mode")) positionSelectedChar3();
+  });
+
+  sceneEl.addEventListener("click", function (ev) {
+    if (!sceneEl.classList.contains("typing-mode")) return;
+    if (typingGrid.contains(ev.target)) return;
+    if (typingVeil.contains(ev.target)) { setTyping(false); return; }
+    if (castSlot3.contains(ev.target)) return;
+    // any other click outside grid/veil/character also closes (covers empty scene area)
+    // keep open if clicking typing input area already handled
+  });
+  typingVeil.addEventListener("click", function () { setTyping(false); });
+
   /* ---------- comments (local guestbook) ---------- */
   var STORAGE_KEY = "roinuj.plaza.comments";
   var dialog = $("#commentsDialog");
@@ -375,6 +544,7 @@
     if (!$("#certLightbox").classList.contains("hidden")) { closeCert(); return; }
     if (!$("#aboutDialog").classList.contains("hidden")) { closeAbout(); return; }
     if (!dialog.classList.contains("hidden")) { closeDialog(); return; }
+    if (sceneEl.classList.contains("typing-mode")) { setTyping(false); return; }
     if (sceneEl.classList.contains("stack-mode")) { setStack(false); return; }
     if (sceneEl.classList.contains("select-mode")) { setProjects(false); return; }
     if (sidebar.classList.contains("open")) setDrawer(false);
@@ -389,6 +559,9 @@
   function openAbout(trigger) {
     lastAboutTrigger = trigger || null;
     if (!dialog.classList.contains("hidden")) closeDialog();
+    if (sceneEl.classList.contains("select-mode")) setProjects(false);
+    if (sceneEl.classList.contains("stack-mode")) setStack(false);
+    if (sceneEl.classList.contains("typing-mode")) setTyping(false);
     if (sidebar.classList.contains("open")) setDrawer(false);
     aboutDialog.classList.remove("hidden");
     updateBodyLock();
@@ -425,6 +598,11 @@
     ev.preventDefault();
     if (sceneEl.classList.contains("stack-mode")) setStack(false);
     else setStack(true);
+  });
+  $("#typingLink").addEventListener("click", function (ev) {
+    ev.preventDefault();
+    if (sceneEl.classList.contains("typing-mode")) setTyping(false);
+    else setTyping(true);
   });
   var heroAbout = $("#heroAbout");
   heroAbout.addEventListener("click", function () { openAbout(heroAbout); });
