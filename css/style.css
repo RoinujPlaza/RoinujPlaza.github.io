@@ -237,7 +237,7 @@ body {
 }
 .cast-slot.s1 { left: 14%; height: 46vh; }
 .cast-slot.s1 .cast-member { animation: bob 3.2s ease-in-out infinite; }
-.cast-slot.s2 { left: 41%; height: 40vh; }
+.cast-slot.s2 { left: 41%; height: 46vh; }
 .cast-slot.s2 .cast-member { animation: bob 3.8s 0.6s ease-in-out infinite; }
 .cast-slot.s3 { left: 62%; height: 46vh; }
 .cast-slot.s3 .cast-member { animation: bob 3.5s 1.1s ease-in-out infinite; }
@@ -643,7 +643,7 @@ body {
   transition: transform 0.45s ease, filter 0.25s ease;
 }
 .cast-slot.s2.active {
-  transform: translateX(var(--shift, 0px)) scale(var(--sel-scale, 1.9));
+  transform: translateX(var(--shift, 0px)) scale(var(--sel-scale, 2.15));
   z-index: 35;
   filter:
     drop-shadow(0 24px 16px rgba(20, 12, 8, 0.5))
@@ -656,7 +656,7 @@ body {
   outline-offset: 4px;
 }
 .scene.select-mode .cast,
-.scene.stack-mode .cast { z-index: 31; }
+.scene.stack-mode .cast { z-index: 20; }
 .cast-slot.s1.active {
   transform: translateX(var(--shift, 0px)) scale(var(--sel-scale, 1.9));
   z-index: 35;
@@ -701,7 +701,7 @@ body {
   z-index: 25;
   display: flex;
   flex-direction: column;
-  gap: clamp(14px, 2vh, 22px);
+  gap: 18px;
   overflow-y: auto;
   scrollbar-width: none;
   visibility: hidden;
@@ -715,8 +715,8 @@ body {
   font-size: clamp(14px, 1.4vw, 20px);
   letter-spacing: 0.06em;
   text-transform: lowercase;
-  color: #f2ece4;
-  text-shadow: 0 2px 0 rgba(0,0,0,0.35);
+  color: #111111;
+  text-shadow: none;
 }
 .stack-label {
   margin: 0 0 8px;
@@ -724,20 +724,24 @@ body {
   font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: lowercase;
-  color: #f2ece4;
+  color: #111111;
 }
 .stack-row { min-width: 0; }
 
 .marquee {
   overflow: hidden;
   border-radius: 12px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.10);
+  height: 84px;
+  display: flex;
+  align-items: center;
   padding: 10px 0;
 }
 .marquee-track {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 14px;
   width: max-content;
   animation: marquee 18s linear infinite;
   will-change: transform;
@@ -748,8 +752,8 @@ body {
 
 .tech-tile {
   flex: 0 0 auto;
-  width: 72px;
-  height: 72px;
+  width: 68px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1043,16 +1047,16 @@ body.loaded .hero-row { animation: fade-up 0.7s 0.15s ease forwards; }
 
   .cast-slot { bottom: 2%; }
   .cast-slot.s1 { left: 4%; height: 26vh; }
-  .cast-slot.s2 { left: 36%; height: 23vh; }
+  .cast-slot.s2 { left: 36%; height: 26vh; }
   .cast-slot.s3 { left: 64%; height: 26vh; }
 
   /* projects / stack cards leave room so the enlarged character stays clear */
-  .cast-slot.s1,
-  .cast-slot.s2 { --sel-scale: 1.3; }
+  .cast-slot.s1 { --sel-scale: 1.3; }
+  .cast-slot.s2 { --sel-scale: 1.55; }
   .projects-grid,
   .stack-grid {
     left: 4%;
-    right: 42%;
+    right: 48%;
     top: 6%;
     bottom: 4%;
   }

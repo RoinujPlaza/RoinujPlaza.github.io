@@ -107,7 +107,7 @@
   function positionSelectedChar() {
     var r = castSlot.getBoundingClientRect();
     var useNarrow = window.innerWidth <= 900;
-    var targetX = window.innerWidth * (useNarrow ? 0.82 : 0.81);
+    var targetX = window.innerWidth * (useNarrow ? 0.81 : 0.79);
     var shift = targetX - (r.left + r.width / 2);
     castSlot.style.setProperty("--shift", shift.toFixed(1) + "px");
   }
@@ -169,7 +169,7 @@
   function positionSelectedChar2() {
     var r = castSlot2.getBoundingClientRect();
     var useNarrow = window.innerWidth <= 900;
-    var targetX = window.innerWidth * (useNarrow ? 0.82 : 0.81);
+    var targetX = window.innerWidth * (useNarrow ? 0.86 : 0.75);
     var shift = targetX - (r.left + r.width / 2);
     castSlot2.style.setProperty("--shift", shift.toFixed(1) + "px");
   }
@@ -243,6 +243,15 @@
         { src: "assets/stack/vscode.svg", alt: "VS Code" }
       ]
     };
+
+    // pad shorter rows so all have 5 tiles (equally full marquee)
+    var maxLen = 5;
+    Object.keys(stacks).forEach(function (k) {
+      var orig = stacks[k].slice();
+      while (stacks[k].length < maxLen) {
+        stacks[k].push(orig[stacks[k].length % orig.length]);
+      }
+    });
 
     function buildTrack(id, items) {
       var track = document.getElementById(id);
@@ -409,11 +418,13 @@
   });
   $("#projectsLink").addEventListener("click", function (ev) {
     ev.preventDefault();
-    setProjects(true);
+    if (sceneEl.classList.contains("select-mode")) setProjects(false);
+    else setProjects(true);
   });
   $("#stackLink").addEventListener("click", function (ev) {
     ev.preventDefault();
-    setStack(true);
+    if (sceneEl.classList.contains("stack-mode")) setStack(false);
+    else setStack(true);
   });
   var heroAbout = $("#heroAbout");
   heroAbout.addEventListener("click", function () { openAbout(heroAbout); });
