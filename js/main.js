@@ -84,6 +84,7 @@
       || !$("#commentsDialog").classList.contains("hidden")
       || !$("#aboutDialog").classList.contains("hidden")
       || !$("#certLightbox").classList.contains("hidden")
+      || !$("#hireDialog").classList.contains("hidden")
       || $("#scene").classList.contains("select-mode")
       || $("#scene").classList.contains("stack-mode")
       || $("#scene").classList.contains("typing-mode");
@@ -546,6 +547,7 @@
   document.addEventListener("keydown", function (ev) {
     if (ev.key !== "Escape") return;
     if (!$("#certLightbox").classList.contains("hidden")) { closeCert(); return; }
+    if (!hireDialog.classList.contains("hidden")) { closeHire(); return; }
     if (!$("#aboutDialog").classList.contains("hidden")) { closeAbout(); return; }
     if (!dialog.classList.contains("hidden")) { closeDialog(); return; }
     if (sceneEl.classList.contains("typing-mode")) { setTyping(false); return; }
@@ -623,6 +625,54 @@
     card.addEventListener("click", function () { openCert(card); });
   });
   certLightbox.addEventListener("click", closeCert);
+
+  /* ---------- hire form ---------- */
+  var hireDialog = $("#hireDialog");
+  var hireForm = $("#hireForm");
+  var hireStatus = $("#hireStatus");
+  var hireSend = hireForm.querySelector(".hire-send");
+
+  function openHire() {
+    if (!dialog.classList.contains("hidden")) closeDialog();
+    if (!aboutDialog.classList.contains("hidden")) closeAbout();
+    if (sceneEl.classList.contains("select-mode")) setProjects(false);
+    if (sceneEl.classList.contains("stack-mode")) setStack(false);
+    if (sceneEl.classList.contains("typing-mode")) setTyping(false);
+    if (sidebar.classList.contains("open")) setDrawer(false);
+    hireStatus.textContent = "";
+    hireDialog.classList.remove("hidden");
+    updateBodyLock();
+    hireForm.querySelector("input[name='name']").focus();
+  }
+
+  function closeHire() {
+    hireDialog.classList.add("hidden");
+    updateBodyLock();
+  }
+
+  $("#hireBtn").addEventListener("click", openHire);
+  $("#hireClose").addEventListener("click", closeHire);
+  hireDialog.addEventListener("click", function (ev) {
+    if (ev.target === hireDialog) closeHire();
+  });
+  hireForm.addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    hireSend.disabled = true;
+    hireStatus.textContent = "sending...";
+    fetch("https://formsubmit.co/ajax/plazaroinuj5@gmail.com", {
+      method: "POST",
+      headers: { Accept: "application/json" },
+      body: new FormData(hireForm)
+    }).then(function (res) {
+      if (!res.ok) throw new Error("send failed");
+      hireStatus.textContent = "message sent!";
+      hireForm.reset();
+    }).catch(function () {
+      hireStatus.textContent = "could not send. please try again.";
+    }).finally(function () {
+      hireSend.disabled = false;
+    });
+  });
 
   var ghChart = $(".github-chart");
   if (ghChart) {
