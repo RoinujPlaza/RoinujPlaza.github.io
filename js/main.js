@@ -104,6 +104,7 @@
   var castSlot = $("#castS1");
   var sceneEl = $("#scene");
   var projectsGrid = $("#projectsGrid");
+  var projectsVeil = $("#projectsVeil");
 
   function positionSelectedChar() {
     var r = castSlot.getBoundingClientRect();
@@ -166,6 +167,7 @@
   /* ---------- middle character -> stack and tools ---------- */
   var castSlot2 = $("#castS2");
   var stackGrid = $("#stackGrid");
+  var stackVeil = $("#stackVeil");
 
   function positionSelectedChar2() {
     var r = castSlot2.getBoundingClientRect();
@@ -317,7 +319,7 @@
   function positionSelectedChar3() {
     var r = castSlot3.getBoundingClientRect();
     var useNarrow = window.innerWidth <= 900;
-    var targetX = window.innerWidth * (useNarrow ? 0.86 : 0.84);
+    var targetX = window.innerWidth * (useNarrow ? 0.86 : 0.82);
     var shift = targetX - (r.left + r.width / 2);
     castSlot3.style.setProperty("--shift", shift.toFixed(1) + "px");
   }
@@ -455,6 +457,8 @@
     // keep open if clicking typing input area already handled
   });
   typingVeil.addEventListener("click", function () { setTyping(false); });
+  projectsVeil.addEventListener("click", function () { setProjects(false); });
+  stackVeil.addEventListener("click", function () { setStack(false); });
 
   /* ---------- comments (local guestbook) ---------- */
   var STORAGE_KEY = "roinuj.plaza.comments";
