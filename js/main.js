@@ -153,7 +153,7 @@
 
   document.querySelectorAll(".demo-link").forEach(function (link) {
     link.addEventListener("click", function (ev) {
-      ev.preventDefault(); // placeholder until real demos exist
+      if (link.getAttribute("href") === "#") ev.preventDefault();
     });
   });
 
