@@ -110,7 +110,7 @@
   function positionSelectedChar() {
     var r = castSlot.getBoundingClientRect();
     var useNarrow = window.innerWidth <= 900;
-    var targetX = window.innerWidth * (useNarrow ? 0.81 : 0.79);
+    var targetX = Math.min(window.innerWidth * (useNarrow ? 0.79 : 0.79), window.innerWidth - 64);
     var shift = targetX - (r.left + r.width / 2);
     castSlot.style.setProperty("--shift", shift.toFixed(1) + "px");
   }
@@ -173,7 +173,7 @@
   function positionSelectedChar2() {
     var r = castSlot2.getBoundingClientRect();
     var useNarrow = window.innerWidth <= 900;
-    var targetX = window.innerWidth * (useNarrow ? 0.86 : 0.75);
+    var targetX = Math.min(window.innerWidth * (useNarrow ? 0.84 : 0.75), window.innerWidth - 64);
     var shift = targetX - (r.left + r.width / 2);
     castSlot2.style.setProperty("--shift", shift.toFixed(1) + "px");
   }
@@ -320,7 +320,7 @@
   function positionSelectedChar3() {
     var r = castSlot3.getBoundingClientRect();
     var useNarrow = window.innerWidth <= 900;
-    var targetX = window.innerWidth * (useNarrow ? 0.86 : 0.82);
+    var targetX = Math.min(window.innerWidth * (useNarrow ? 0.84 : 0.82), window.innerWidth - 64);
     var shift = targetX - (r.left + r.width / 2);
     castSlot3.style.setProperty("--shift", shift.toFixed(1) + "px");
   }
