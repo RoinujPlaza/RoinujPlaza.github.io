@@ -67,6 +67,8 @@
       </svg>
       comments
     </button>
+    
+    
 
     <hr class="rule">
 
@@ -142,7 +144,7 @@
     <div class="stack-veil" id="stackVeil" aria-hidden="true"></div>
     <div class="stack-grid" id="stackGrid" aria-label="Stack and tools"><h2 class="stack-title">stack and tools</h2><section class="stack-row"><h3 class="stack-label">frondend</h3><div class="marquee" aria-hidden="true"><div class="marquee-track" id="marqueeFrontend"></div></div></section><section class="stack-row"><h3 class="stack-label">backend</h3><div class="marquee" aria-hidden="true"><div class="marquee-track" id="marqueeBackend"></div></div></section><section class="stack-row"><h3 class="stack-label">tools</h3><div class="marquee" aria-hidden="true"><div class="marquee-track" id="marqueeTools"></div></div></section></div>
     <div class="typing-veil" id="typingVeil" aria-hidden="true"></div>
-    <div class="typing-grid" id="typingGrid" aria-label="Typing test"><h2 class="typing-title">typing test</h2><div class="typing-card"><pre class="typing-text" id="typingText" aria-live="polite"></pre><textarea class="typing-input" id="typingInput" rows="4" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Start typing..."></textarea><div class="typing-stats"><span>WPM: <b id="wpm">0</b></span><span>Accuracy: <b id="acc">100%</b></span><span>Time: <b id="time">30s</b></span></div><button class="typing-restart" id="typingRestart" type="button">restart</button></div></div>
+    <div class="typing-grid" id="typingGrid" aria-label="Typing test"><h2 class="typing-title">typing test</h2><div class="typing-card" id="typingCard"><pre class="typing-text" id="typingText" aria-live="polite"></pre><textarea class="typing-input" id="typingInput" rows="4" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Start typing..."></textarea><div class="typing-stats"><span>WPM: <b id="wpm">0</b></span><span>Accuracy: <b id="acc">100%</b></span><span>Time: <b id="time">0s</b></span></div><button class="typing-restart" id="typingRestart" type="button">restart</button></div><div class="typing-result hidden" id="typingResult" role="dialog" aria-modal="false" aria-label="Typing results"><div class="typing-result-hints"><span><kbd>tab</kbd> restart</span><span><kbd>esc</kbd> close</span></div><div class="typing-result-wpm" id="resultWpm">0</div><p class="typing-result-label">words per minute</p><div class="typing-result-stats"><div><b id="resultAcc">0%</b><span>accuracy</span></div><div><b id="resultRaw">0</b><span>raw</span></div><div><b id="resultTime">0s</b><span>time</span></div></div><p class="typing-result-msg" id="resultMsg"></p><button class="typing-result-try" id="resultTry" type="button">&#8635; try again</button></div></div>
   </main>
 
   <div class="dialog-backdrop hidden" id="commentsDialog" role="dialog" aria-modal="true" aria-labelledby="commentsTitle">

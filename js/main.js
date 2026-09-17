@@ -301,6 +301,13 @@
   var accEl = $("#acc");
   var timeEl = $("#time");
   var typingRestart = $("#typingRestart");
+  var typingResult = $("#typingResult");
+  var resultWpm = $("#resultWpm");
+  var resultAcc = $("#resultAcc");
+  var resultRaw = $("#resultRaw");
+  var resultTime = $("#resultTime");
+  var resultMsg = $("#resultMsg");
+  var resultTry = $("#resultTry");
 
   var snippets = [
     "function greet(name) {\n  return `Hello, ${name}!`;\n}",
@@ -314,7 +321,7 @@
   ];
   var currentSnippet = "";
   var timer = null;
-  var timeLeft = 30;
+  var elapsed = 0;
   var started = false;
 
   function positionSelectedChar3() {
@@ -335,6 +342,35 @@
     }
   }
 
+  function hideTypingResult() {
+    typingResult.classList.add("hidden");
+  }
+
+  function showTypingResult() {
+    var typed = typingInput.value;
+    var correct = 0;
+    for (var i = 0; i < typed.length && i < currentSnippet.length; i++) {
+      if (typed[i] === currentSnippet[i]) correct++;
+    }
+    if (elapsed <= 0) elapsed = 1;
+    var mins = elapsed / 60 || 0.01;
+    var wpm = Math.round((correct / 5) / mins);
+    if (!isFinite(wpm) || wpm < 0) wpm = 0;
+    if (typed.length === 0) wpm = 0;
+    var acc = typed.length ? Math.round((correct / typed.length) * 100) : 100;
+    var raw = Math.round((typed.length / 5) / mins);
+    if (!isFinite(raw) || raw < 0) raw = 0;
+    resultWpm.textContent = String(wpm);
+    resultAcc.textContent = acc + "%";
+    resultRaw.textContent = String(raw);
+    resultTime.textContent = elapsed.toFixed(1) + "s";
+    if (wpm >= 60) resultMsg.textContent = "great code speed — keep shipping!";
+    else if (wpm >= 35) resultMsg.textContent = "nice typing — your code flow is solid";
+    else if (wpm >= 20) resultMsg.textContent = "good start — keep practicing your snippets";
+    else resultMsg.textContent = "keep going — speed comes with clean code reps";
+    typingResult.classList.remove("hidden");
+  }
+
   function pickSnippet() {
     currentSnippet = snippets[Math.floor(Math.random() * snippets.length)];
     renderSnippet();
@@ -342,11 +378,12 @@
     typingInput.disabled = false;
     wpmEl.textContent = "0";
     accEl.textContent = "100%";
-    timeLeft = 30;
-    timeEl.textContent = timeLeft + "s";
+    elapsed = 0;
+    timeEl.textContent = elapsed + "s";
     started = false;
     clearInterval(timer);
     timer = null;
+    hideTypingResult();
   }
 
   function updateStats() {
@@ -355,8 +392,8 @@
     for (var i = 0; i < typed.length && i < currentSnippet.length; i++) {
       if (typed[i] === currentSnippet[i]) correct++;
     }
-    var elapsed = 30 - timeLeft;
-    var mins = elapsed / 60 || 0.01;
+    var mins = (elapsed || 0.01) / 60;
+    if (mins < 0.01) mins = 0.01;
     var wpm = Math.round((correct / 5) / mins);
     if (!isFinite(wpm) || wpm < 0) wpm = 0;
     if (typed.length === 0) wpm = 0;
@@ -376,15 +413,11 @@
   function startTimer() {
     if (started) return;
     started = true;
+    // count up from 1 until all text is typed
     timer = setInterval(function () {
-      timeLeft--;
-      timeEl.textContent = timeLeft + "s";
+      elapsed++;
+      timeEl.textContent = elapsed + "s";
       updateStats();
-      if (timeLeft <= 0) {
-        clearInterval(timer);
-        timer = null;
-        typingInput.disabled = true;
-      }
     }, 1000);
   }
 
@@ -441,9 +474,22 @@
       clearInterval(timer);
       timer = null;
       typingInput.disabled = true;
+      showTypingResult();
     }
   });
   typingRestart.addEventListener("click", pickSnippet);
+  resultTry.addEventListener("click", function () {
+    pickSnippet();
+    typingInput.focus();
+  });
+  typingResult.addEventListener("click", function (ev) {
+    if (ev.target === typingResult) hideTypingResult();
+  });
+  document.addEventListener("keydown", function (ev) {
+    if (!sceneEl.classList.contains("typing-mode")) return;
+    if (typingResult.classList.contains("hidden")) return;
+    if (ev.key === "Tab") { ev.preventDefault(); pickSnippet(); typingInput.focus(); }
+  });
 
   window.addEventListener("resize", function () {
     if (sceneEl.classList.contains("typing-mode")) positionSelectedChar3();
@@ -550,6 +596,7 @@
     if (!hireDialog.classList.contains("hidden")) { closeHire(); return; }
     if (!$("#aboutDialog").classList.contains("hidden")) { closeAbout(); return; }
     if (!dialog.classList.contains("hidden")) { closeDialog(); return; }
+    if (!$("#typingResult").classList.contains("hidden")) { $("#typingResult").classList.add("hidden"); return; }
     if (sceneEl.classList.contains("typing-mode")) { setTyping(false); return; }
     if (sceneEl.classList.contains("stack-mode")) { setStack(false); return; }
     if (sceneEl.classList.contains("select-mode")) { setProjects(false); return; }

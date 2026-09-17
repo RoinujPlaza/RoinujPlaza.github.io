@@ -992,6 +992,89 @@ body {
 }
 .typing-restart:hover { background: var(--accent-deep); }
 
+/* ---------- typing result overlay (Bryl-style) ---------- */
+.typing-result {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px 16px;
+  background: rgba(255, 255, 255, 0.92);
+  -webkit-backdrop-filter: blur(18px) saturate(1.1);
+  backdrop-filter: blur(18px) saturate(1.1);
+  border-radius: 12px;
+  text-align: center;
+  z-index: 5;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 0.25s, opacity 0.25s ease;
+}
+.typing-result:not(.hidden) { visibility: visible; opacity: 1; transition: opacity 0.25s ease; }
+.typing-result-hints {
+  display: flex;
+  gap: 16px;
+  font-family: "Silkscreen", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: #9a9590;
+}
+.typing-result-hints kbd {
+  display: inline-block;
+  background: #eee8e6;
+  border: 1px solid #d8d0cc;
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-family: inherit;
+  font-size: 10px;
+}
+.typing-result-wpm {
+  font-family: "Press Start 2P", monospace;
+  font-size: clamp(36px, 6vw, 64px);
+  line-height: 1;
+  color: #111111;
+  letter-spacing: -0.04em;
+}
+.typing-result-label {
+  margin: 0;
+  font-family: "Silkscreen", monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9a9590;
+}
+.typing-result-stats {
+  display: flex;
+  gap: 28px;
+  margin-top: 6px;
+}
+.typing-result-stats div { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.typing-result-stats b { font-family: "Silkscreen", monospace; font-size: 18px; color: #111111; }
+.typing-result-stats span { font-family: "Silkscreen", monospace; font-size: 9px; letter-spacing: 0.14em; text-transform: uppercase; color: #9a9590; }
+.typing-result-msg {
+  margin: 4px 0 0;
+  font-family: "Silkscreen", monospace;
+  font-size: 11px;
+  color: #7d766e;
+  letter-spacing: 0.04em;
+}
+.typing-result-try {
+  margin-top: 12px;
+  background: #111111;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  font-family: "Silkscreen", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  padding: 10px 22px;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.15s ease;
+}
+.typing-result-try:hover { background: #2a2a2a; transform: translateY(-1px); }
+
 .project-card {
   min-width: 0;
   background: #14100f;
@@ -1263,13 +1346,14 @@ body.loaded .hero-row { animation: fade-up 0.7s 0.15s ease forwards; }
   }
   .scrim.open { opacity: 1; pointer-events: auto; }
 
-  /* --- scene fills the rest of the viewport, hero vertically centered --- */
+  /* --- scene fills the rest of the viewport, hero at top on mobile --- */
   .scene {
     margin-left: 0;
     height: calc(100vh - 60px);
     min-height: 480px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    padding-top: 8px;
   }
   .scene-bg { position: fixed; inset: 0; }
 
