@@ -121,6 +121,16 @@
       if (!aboutDialog.classList.contains("hidden")) closeAbout();
       if (sidebar.classList.contains("open")) setDrawer(false);
       positionSelectedChar();
+    } else {
+      // closing grid should also close dropdown if it is open
+      var dm = document.querySelector("#dropdownMenu");
+      var dw = document.querySelector(".dropdown");
+      var db = document.querySelector("#dropdownBtn");
+      if (dm && dm.classList.contains("show")) {
+        dm.classList.remove("show");
+        if (dw) dw.classList.remove("open");
+        if (db) db.setAttribute("aria-expanded", "false");
+      }
     }
     castSlot.classList.toggle("active", open);
     castSlot.setAttribute("aria-expanded", String(open));
@@ -642,11 +652,14 @@
     ev.preventDefault();
     openAbout(ev.currentTarget);
   });
-  $("#projectsLink").addEventListener("click", function (ev) {
-    ev.preventDefault();
-    if (sceneEl.classList.contains("select-mode")) setProjects(false);
-    else setProjects(true);
-  });
+  var projectsLink = $("#projectsLink");
+  if (projectsLink) {
+    projectsLink.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      if (sceneEl.classList.contains("select-mode")) setProjects(false);
+      else setProjects(true);
+    });
+  }
   $("#stackLink").addEventListener("click", function (ev) {
     ev.preventDefault();
     if (sceneEl.classList.contains("stack-mode")) setStack(false);
@@ -695,6 +708,34 @@
   function closeHire() {
     hireDialog.classList.add("hidden");
     updateBodyLock();
+  }
+
+  /* ---------- navbar dropdown (vanilla JS) ---------- */
+  var dropdownButton = document.querySelector("#dropdownBtn");
+  var dropdownMenu = document.querySelector("#dropdownMenu");
+  var dropdownWrap = document.querySelector(".dropdown");
+  if (dropdownButton && dropdownMenu) {
+    dropdownButton.addEventListener("click", function (ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      var willOpen = !dropdownMenu.classList.contains("show");
+      dropdownMenu.classList.toggle("show");
+      dropdownWrap.classList.toggle("open");
+      dropdownButton.setAttribute("aria-expanded", String(willOpen));
+      // also open/close the character + projects grid so both appear together
+      if (willOpen) setProjects(true);
+      else setProjects(false);
+    });
+    document.addEventListener("click", function (ev) {
+      if (!dropdownWrap.contains(ev.target)) {
+        if (dropdownMenu.classList.contains("show")) {
+          dropdownMenu.classList.remove("show");
+          dropdownWrap.classList.remove("open");
+          dropdownButton.setAttribute("aria-expanded", "false");
+          setProjects(false);
+        }
+      }
+    });
   }
 
   $("#hireBtn").addEventListener("click", openHire);

@@ -27,7 +27,16 @@
 
     <nav class="nav reveal d1" aria-label="Main">
       <a href="#" id="aboutLink">about me</a>
-      <a href="#" id="projectsLink">projects</a>
+      <div class="dropdown" id="projectsDropdown">
+        <button id="dropdownBtn" aria-expanded="false" aria-haspopup="true">projects <span class="arrow-ind">▼</span></button>
+        <ul id="dropdownMenu" class="dropdown-menu" role="menu">
+          <li><a href="https://roinujplaza.github.io/CFG-Quest/" target="_blank" rel="noopener noreferrer" role="menuitem">CFG Quest — live demo</a></li>
+          <li><a href="https://roinujplaza.github.io/soundwaves/" target="_blank" rel="noopener noreferrer" role="menuitem">Soundwaves — live demo</a></li>
+          <li><a href="https://roinujplaza.github.io/gameragex/" target="_blank" rel="noopener noreferrer" role="menuitem">Gameragex — live demo</a></li>
+          <li><a href="https://github.com/RoinujPlaza/memory-hierarchy-visualizer" target="_blank" rel="noopener noreferrer" role="menuitem">Memory Hierarchy Visualizer — view source</a></li>
+          <li><a href="https://github.com/RoinujPlaza/Tabi" target="_blank" rel="noopener noreferrer" role="menuitem">Tabi — view source</a></li>
+        </ul>
+      </div>
       <a href="#" id="stackLink">stack and tools</a>
       <a href="#" id="typingLink">typing test</a>
     </nav>
