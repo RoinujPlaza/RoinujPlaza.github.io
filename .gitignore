@@ -8,3 +8,7 @@ HOME.png
 # OS junk
 Thumbs.db
 Desktop.ini
+
+# React build output
+node_modules/
+dist/
